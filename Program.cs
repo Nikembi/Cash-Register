@@ -8,66 +8,65 @@ namespace Cash_Register
     {
         static void Main(string[] args)
         {
-            double registerBalance = 50.00;
+            decimal startingBalance = 0.00m;
+            decimal currentBalance = startingBalance;
 
-            //Start of application
             Console.WriteLine("Welcome to the Cash Register Application!");
+            Console.Write("Enter the starting balance from bank withdrawal: ");
+            startingBalance = decimal.Parse(Console.ReadLine());
 
-            //Handles the Deposit from bank to userBalance
-            Console.WriteLine($"How much would you like to deposit? : ");
-            var userInput = Convert.ToDouble(Console.ReadLine());
-            Balhandler(userInput);
+            while (true)
+            {
+                Console.WriteLine("\n1. Make a Sale");
+                Console.WriteLine("2. Exit");
+                Console.Write("Choose an option: ");
+                int option = int.Parse(Console.ReadLine());
 
-            Console.WriteLine("Enter Item price: ");
-            var pricingInput = Convert.ToDouble(Console.ReadLine());
-            var charge = userInput - pricingInput;
-            
-            if (pricingInput > userInput)
-            {
-                Console.WriteLine("Insufficient Funds, Add more from bank");
-            }
-            else
-            {
-                Console.WriteLine($"Success!, You're balance is now {charge}");
-            }
-            List<Transactions> transactionList = new List<Transactions>
-            {
-                new Transactions
+                if (option == 1)
                 {
-                    TransactionId = 1,
-                    ProductName = "Lotion",
-                    Charge = 8.00,
-                    CashGiven = userInput,
+                    Console.Write("Enter the charge for the sale: ");
+                    decimal charge = decimal.Parse(Console.ReadLine());
 
+                    if (charge > 100)
+                    {
+                        Console.WriteLine("Bills greater than $100 cannot be accepted.");
+                        continue;
+                    }
+
+                    Console.Write("Enter the amount of cash given by the customer: ");
+                    decimal cashGiven = decimal.Parse(Console.ReadLine());
+
+                    if (cashGiven < charge)
+                    {
+                        Console.WriteLine("Insufficient cash given by the customer.");
+                        continue;
+                    }
+
+                    decimal change = cashGiven - charge;
+
+                    if (change > currentBalance)
+                    {
+                        Console.WriteLine("Cannot give more change than is available in the drawer.");
+                        continue;
+                    }
+
+                    currentBalance -= change;
+
+                    Console.WriteLine($"Transaction successful! Change due: {change:C}");
                 }
-            };
-        }
+                else if (option == 2)
+                {
+                    break;
+                }
+                else
+                {
+                    Console.WriteLine("Invalid option. Please try again.");
+                }
+            }
 
-        static void Balhandler(double userBalance)
-        {
-            if (userBalance == 0 || userBalance > 100)
-            {
-                Console.WriteLine("You cant do that dumb sht");
-            }
-            else
-            {
-                Console.WriteLine($"Success, You're current balance is now: {userBalance}");
-
-            }
+            Console.WriteLine($"Final balance: {currentBalance:C}");
+            Console.WriteLine("Thank you for using the Cash Register Application!");
         }
-        static void cRegister()
-        {
-         
-        }
-        static void ProductCharge(double prodPrice)
-        {
-            if (prodPrice == 0)
-            {
-                Console.WriteLine("Invalid product pricing, Please try again.");
-            }
-                throw new NotImplementedException();
-        }
-      
     }
 }
 
